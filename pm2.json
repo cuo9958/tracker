@@ -1,0 +1,12 @@
+{
+    "apps": [{
+        "name": "tracker",
+        "script": "index.js",
+        "args": [],
+        "env": {
+            "PORT": "18630",
+            "NODE_ENV": "development",
+            "SERVER_ENV": "dev"
+        }
+    }]
+}
