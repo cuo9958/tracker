@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>测试网页</title>
+    </head>
+    <body>
+        <input type="button" value="异常1" onclick="message1()" />
+        <input type="button" value="异常2" onclick="message2()" />
+        <input type="button" value="异常3" onclick="message3()" />
+        <input type="button" value="异常4" onclick="message4()" />
+        <input type="button" value="测试发送消息" onclick="postErr()" />
+
+        <script>
+            function postErr() {
+                const obj = {};
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", "http://127.0.0.1:18630/api_track/test");
+                xhr.send(JSON.stringify(obj));
+            }
+            var orgError = window.onerror;
+            window.onerror = function (msg, url, line, col, error) {
+                var newMsg = msg;
+                console.log(msg, url, line, col, error);
+                orgError && orgError.apply(global, arguments);
+            };
+            var nativeRequest = XMLHttpRequest;
+            window.XMLHttpRequest = function () {
+                var xml = new nativeRequest();
+                xml.tracker = {};
+                xml._tracker_open = xml.open;
+                xml.addEventListener("error", reqerr);
+                xml.addEventListener("timeout", reqerr);
+                xml.addEventListener("readystatechange", reqerr);
+                xml.open = function (r, t, a, o, n) {
+                    xml.tracker._request_method = r;
+                    xml.tracker._request_url = t;
+                    return xml._tracker_open(r, t, a, o, n);
+                };
+                return xml;
+            };
+            function reqerr(r) {
+                var t = r.target;
+                console.log("reqerr", r);
+                if ("readystatechange" === r.type) {
+                    if (4 === t.readyState) {
+                        console.log("slow");
+                    }
+                } else if ("error" === r.type) {
+                    t.tracker._response_data = t.responseText;
+                    t.tracker._status = t.status;
+                } else if ("timeout" === r.type) {
+                    t.tracker._response_data = t.responseText;
+                    t.tracker._status = t.status;
+                }
+            }
+            function message1() {
+                aalert("hello!");
+            }
+            function message2() {
+                throw new Error("hello");
+            }
+            function message3() {
+                console.log(sss);
+            }
+            function message4() {
+                xhr = new XMLHttpRequest();
+                xhr.open("GET", "http://www.dadadw.com/adwadw.js");
+                xhr.onreadystatechange = state_Change;
+                //onabort
+                //onprogress
+                //status
+                xhr.send();
+            }
+            function state_Change() {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        message3();
+                    } else {
+                        // somecode
+                    }
+                }
+            }
+
+            var s = {
+                checkCrossOrigin: function (e, r) {
+                    if (e && r) {
+                        for (var t = !1, a = 0; a < r.length; a++) e.match(r[a]) && (t |= !0);
+                        return !t;
+                    }
+                    return false;
+                },
+                composeScriptErrorData: function (message, file, line, column, o) {
+                    let trace = "";
+                    if (o) trace = o.stack.toString();
+                    return { message: message, detail: { file: file, line: line, column: column, trace: trace } };
+                },
+                getUserAgent: function () {
+                    return window.navigator.userAgent;
+                },
+                getCurrentURL: function () {
+                    return window.location.href;
+                },
+                composeTrackerData: function (e, r) {
+                    return { type: e, data: r };
+                },
+            };
+            function a(e, r) {
+                var t = s.composeTrackerData(e, r);
+                (t.currentURL = s.getCurrentURL()),
+                    (t.userAgent = s.getUserAgent()),
+                    window.setTimeout(function () {
+                        o(t);
+                    }, 0);
+            }
+            function o(r) {
+                var t = JSON.stringify(r),
+                    a = new window.XMLHttpRequest();
+                // a.open("POST", e.endpoint, !0), a.send(t);
+            }
+
+            function track1(message, file, line, column, o) {
+                let trace = "";
+                if (o) trace = o.stack.toString();
+                return { message: message, detail: { file: file, line: line, column: column, trace: trace } };
+            }
+            window.addEventListener(
+                "error",
+                function (r) {
+                    //需要记录的内容
+                    if (!r.message) return true;
+                    var t = track1(r.message, r.filename, r.lineno, r.colno, r.error);
+                    console.log(t);
+                },
+                true
+            );
+            function r(r) {
+                var t = r.target.tagName,
+                    o = r.target.src;
+
+                if ("load" === r.type) {
+                    console.log("RESOURCE CROSS ORIGIN", t, o);
+                } else if ("error" === r.type) {
+                    console.log("RESOURCE LOAD ERROR", t, o);
+                }
+            }
+            document.addEventListener("error", r, true);
+            document.addEventListener("load", r, true);
+        </script>
+        <script src="http://adwd.com/aaa.js"></script>
+    </body>
+</html>

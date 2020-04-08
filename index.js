@@ -18,6 +18,8 @@ const test = require("./api/index");
 
 router.use("/api_track/test", test.routers);
 
+app.use(router.routes()).use(router.allowedMethods());
+
 const port = process.env.PORT || "18630";
 
 app.listen(port, function () {
