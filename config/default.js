@@ -10,19 +10,21 @@ module.exports = {
         database: "fe_task",
         user: "fe_task",
         password: "8DS2RSAWr4HSSXSE",
-        connectionLimit: 2
+        connectionLimit: 2,
     },
     //开发环境，普通redis配置
     redis: "redis://l-fe2.dev.bj6.daling.com:6379",
     ldap: {
-        name: "subject_test",
-        login: "http://aaa.corp.daling.com/api/checklogin",
-        auth: "http://aaa.corp.daling.com/api/checkauth"
+        server: "ldap://ldap.srv.daling.com",
+        baseDn: "cn=admin,dc=daling,dc=com",
+        bindPassword: "daling.com",
+        searchDn: "dc=daling,dc=com",
+        usernameKey: "uid",
     },
     //mongodb配置
     mg: {
         name: "fe_topic",
-        reset:"",
-        url: "mongodb://l-fe2.dev.bj6.daling.com:27017"
-    }
+        reset: "",
+        url: "mongodb://l-fe2.dev.bj6.daling.com:27017",
+    },
 };
