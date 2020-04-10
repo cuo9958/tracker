@@ -1,7 +1,7 @@
 {
     "apps": [{
         "name": "tracker",
-        "script": "index.js",
+        "script": "dist/index.js",
         "args": [],
         "env": {
             "PORT": "18630",

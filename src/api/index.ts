@@ -1,5 +1,5 @@
-const Router = require("koa-router");
-const CrosMiddle = require("../middleware/cros");
+import Router from "koa-router";
+import CrosMiddle from "../middleware/cros";
 
 const router = new Router();
 

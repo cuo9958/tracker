@@ -1,6 +1,6 @@
-const Koa = require("koa");
-const Router = require("koa-router");
-const KoaBody = require("koa-body");
+import Koa from "koa";
+import Router from "koa-router";
+import KoaBody from "koa-body";
 
 const app = new Koa();
 const router = new Router();

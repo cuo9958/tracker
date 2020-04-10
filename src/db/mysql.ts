@@ -1,10 +1,19 @@
 /**
  * 数据库连接类
  */
-const Sequelize = require("sequelize");
-const config = require("config");
+import { Sequelize } from "sequelize";
+import config from "config";
 
-const dbConfig = config.db;
+interface IDBCONF {
+    database: string;
+    user: string;
+    password: string;
+    host: string;
+    port: number;
+    connectionLimit: number;
+}
+
+const dbConfig: IDBCONF = config.get("db");
 
 const mysqlconnection = new Sequelize(dbConfig.database, dbConfig.user, dbConfig.password, {
     host: dbConfig.host,
@@ -19,4 +28,5 @@ const mysqlconnection = new Sequelize(dbConfig.database, dbConfig.user, dbConfig
         idle: 10000,
     },
 });
-module.exports = mysqlconnection;
+
+export default mysqlconnection;

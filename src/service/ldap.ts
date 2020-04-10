@@ -1,7 +1,15 @@
-const { authenticate } = require("ldap-authentication");
-const config = require("config");
+import { authenticate } from "ldap-authentication";
+import config from "config";
 
-const cfg = config.get("ldap");
+interface ICFG {
+    server: string;
+    baseDn: string;
+    bindPassword: string;
+    searchDn: string;
+    usernameKey: string;
+}
+
+const cfg: ICFG = config.get("ldap");
 
 const options = {
     ldapOpts: {
@@ -20,7 +28,7 @@ const options = {
  * @param {*} username 用户名
  * @param {*} userPassword 密码
  */
-async function login(username, userPassword) {
+async function login(username: string, userPassword: string) {
     const user = await authenticate(
         Object.assign({}, options, {
             username,
@@ -34,6 +42,4 @@ async function login(username, userPassword) {
     };
 }
 
-module.exports = {
-    login,
-};
+exports.login = login;
