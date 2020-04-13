@@ -1,16 +1,16 @@
-import Sequelize, { Model } from "sequelize";
+import { Model, DataTypes } from "sequelize";
 import db from "../db//mysql";
 
 class Files extends Model {}
 Files.init(
     {
         id: {
-            type: Sequelize.INTEGER,
+            type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
         },
         name: {
-            type: Sequelize.STRING(100),
+            type: DataTypes.STRING(100),
             defaultValue: "",
             comment: "文件名称",
         },
@@ -18,7 +18,7 @@ Files.init(
     {
         sequelize: db,
         freezeTableName: true,
-        modelName: "t_files",
+        tableName: "t_files",
     }
 );
 
