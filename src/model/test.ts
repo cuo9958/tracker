@@ -24,10 +24,10 @@ const Files = db.define(
 // Files.sync({ force: true });
 
 module.exports = {
-    insert: function (model) {
+    insert: function (model: any) {
         return Files.create(model);
     },
-    get: function (id) {
+    get: function (id: number) {
         return Files.findOne({
             where: {
                 id,
