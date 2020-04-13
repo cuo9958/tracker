@@ -1,8 +1,8 @@
-const Sequelize = require("sequelize");
-const db = require("../db/mysql");
+import Sequelize, { Model } from "sequelize";
+import db from "../db//mysql";
 
-const Files = db.define(
-    "t_files",
+class Files extends Model {}
+Files.init(
     {
         id: {
             type: Sequelize.INTEGER,
@@ -16,7 +16,9 @@ const Files = db.define(
         },
     },
     {
+        sequelize: db,
         freezeTableName: true,
+        modelName: "t_files",
     }
 );
 
