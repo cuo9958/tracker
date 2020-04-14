@@ -18,7 +18,7 @@ const test = require("./api/index");
 const msg = require("./api/msg");
 
 router.use("/api_track/test", test.routers);
-router.use("/api_track/msg", msg.routers);
+router.use("/api_track", msg.routers);
 
 app.use(router.routes()).use(router.allowedMethods());
 

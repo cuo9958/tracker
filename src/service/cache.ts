@@ -2,6 +2,7 @@
  * 缓存模块
  * 1.本地保持缓存
  * 2.及时更新
+ * 3.更新频率控制，防止同时多次更新
  */
 import local_cache from "@cuo9958/local_cache";
 
