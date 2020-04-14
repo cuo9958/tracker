@@ -13,6 +13,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@cuo9958/local_cache": "^1.0.0",
     "config": "^3.3.1",
     "cron": "^1.8.2",
     "ioredis": "^4.16.1",
