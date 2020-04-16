@@ -1,14 +1,9 @@
 import Koa from "koa";
-import Router from "koa-router";
 import KoaBody from "koa-body";
 import { sendSuccess, sendError } from "./middleware/resp";
-
-import project from "./route/project";
-import test from "./api";
-import msg from "./api/msg";
+import routers from "./router";
 
 const app = new Koa();
-const router = new Router();
 
 app.use(
     KoaBody({
@@ -19,18 +14,12 @@ app.use(
     })
 );
 
+//加载默认的处理方法
 app.use(sendSuccess);
 app.use(sendError);
 
-//对内提供的接口
-
-router.use("/api_track/project", project);
-
-//对外提供的接口
-router.use("/api_track/test", test);
-router.use("/api_track", msg);
-
-app.use(router.routes()).use(router.allowedMethods());
+//加载路由
+app.use(routers.routes()).use(routers.allowedMethods());
 
 const port = process.env.PORT || "18630";
 

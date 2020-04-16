@@ -3,5 +3,5 @@
     "debug": false,
     "exec": "ts-node  ./src/index.ts",
     "ignore": ["node_modules", "src/*"],
-    "watch": ["src/*"]
+    "watch": ["src/**"]
 }

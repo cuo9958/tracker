@@ -15,10 +15,13 @@ export type IRouterContext = Koa.ParameterizedContext &
  * @param ctx ctx
  */
 export function sendSuccess(ctx: any, next) {
+    const now = Date.now();
+
     ctx.Success = function (data = "ok") {
         ctx.body = {
             code: 1,
             data,
+            t: Date.now() - now,
         };
     };
     next();
@@ -29,10 +32,13 @@ export function sendSuccess(ctx: any, next) {
  * @param ctx ctx
  */
 export function sendError(ctx, next) {
+    const now = Date.now();
+
     ctx.Error = function (msg: string, code = 0) {
         ctx.body = {
             code,
             msg,
+            t: Date.now() - now,
         };
     };
     next();
