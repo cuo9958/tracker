@@ -1,7 +1,7 @@
 import Koa from "koa";
 import Router from "koa-router";
 import KoaBody from "koa-body";
-import { sendSucess, sendError } from "./middleware/resp";
+import { sendSuccess, sendError } from "./middleware/resp";
 import { IRouterParamContext } from "koa-router";
 
 type IRouterContext = Koa.ParameterizedContext & IRouterParamContext;
@@ -17,7 +17,7 @@ app.use(
     })
 );
 
-app.use(sendSucess);
+app.use(sendSuccess);
 app.use(sendError);
 
 const test = require("./api/index");
