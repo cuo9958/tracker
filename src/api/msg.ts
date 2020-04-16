@@ -23,4 +23,4 @@ router.get("/device", CrosMiddle, function (ctx, next) {
 
     ctx.body = "";
 });
-exports.routers = router.routes();
+export default router.routes();

@@ -7,4 +7,4 @@ router.all("/", CrosMiddle, function (ctx, next) {
     ctx.body = "不存在的接口";
 });
 
-exports.routers = router.routes();
+export default router.routes();

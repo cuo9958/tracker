@@ -4,7 +4,7 @@ import { IRouterContext } from "../middleware/resp";
 const router = new Router();
 
 //获取项目列表
-router.get("/", function (ctx: IRouterContext, next) {
+router.get("/", async (ctx: IRouterContext, next) => {
     const { start = 0 } = ctx.query;
 
     const list = [];
@@ -40,4 +40,5 @@ router.post("/:id", function (ctx: IRouterContext, next) {
 router.del("/:id", function (ctx: IRouterContext, next) {
     ctx.Success();
 });
-exports.routers = router.routes();
+
+export default router.routes();
