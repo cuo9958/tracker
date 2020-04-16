@@ -13,7 +13,7 @@ router.get("/", function (ctx: IRouterContext, next) {
         rows: list,
         count: 0,
     };
-    ctx.Sucess(data);
+    ctx.Success(data);
 });
 
 //根据项目id获取项目信息
@@ -22,7 +22,7 @@ router.get("/:id", function (ctx: IRouterContext, next) {
 
     const model = {};
 
-    ctx.Sucess(model);
+    ctx.Success(model);
 });
 
 //增加或者修改项目内容
@@ -33,11 +33,11 @@ router.post("/:id", function (ctx: IRouterContext, next) {
     const model = {
         title,
     };
-    ctx.Sucess(model);
+    ctx.Success(model);
 });
 
 //删除项目
 router.del("/:id", function (ctx: IRouterContext, next) {
-    ctx.Sucess();
+    ctx.Success();
 });
 exports.routers = router.routes();
