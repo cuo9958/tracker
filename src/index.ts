@@ -1,7 +1,10 @@
 import Koa from "koa";
 import Router from "koa-router";
 import KoaBody from "koa-body";
+import { sendSucess, sendError } from "./middleware/resp";
+import { IRouterParamContext } from "koa-router";
 
+type IRouterContext = Koa.ParameterizedContext & IRouterParamContext;
 const app = new Koa();
 const router = new Router();
 
@@ -14,11 +17,19 @@ app.use(
     })
 );
 
+app.use(sendSucess);
+app.use(sendError);
+
 const test = require("./api/index");
 const msg = require("./api/msg");
 
+//对外提供的接口
 router.use("/api_track/test", test.routers);
 router.use("/api_track", msg.routers);
+
+//对内提供的接口
+const project = require("./route/project");
+router.use("/api_track/project", project.routers);
 
 app.use(router.routes()).use(router.allowedMethods());
 
