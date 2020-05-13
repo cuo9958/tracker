@@ -54,8 +54,8 @@ export function insertClickHouse(sql: string, data?: object): Promise<object[]> 
  * @param sync 是否强制创建,默认不强制
  */
 export function CreateDataBase(dataName, sync = false) {
-    if (sync) return "CREATE DATABASE " + dataName;
-    return "CREATE DATABASE IF NOT EXISTS " + dataName;
+    if (sync) return "CREATE DATABASE IF NOT EXISTS " + dataName;
+    return "CREATE DATABASE " + dataName;
 }
 interface ModelType {
     type: string;
@@ -73,7 +73,6 @@ interface ICreateTable {
     sample?: string;
     settings?: string;
     ttl?: string;
-    sync?: boolean;
 }
 /**
  *创建一个新的表
@@ -92,10 +91,17 @@ export function CreateTable(opts: ICreateTable) {
     const SAMPLE = opts.sample ? "SAMPLE BY " + opts.sample : "";
     const SETTINGS = opts.settings ? "SETTINGS " + opts.settings : "";
     const body = getBody(opts.model);
-    return `CREATE TABLE ${opts.sync ? "" : "IF NOT EXISTS"} ${opts.tableName}(
+    return `CREATE TABLE IF NOT EXISTS ${opts.tableName}(
         ${body}
     )
     ${opts.enhine} ${PARTITION} ${ORDER} ${SAMPLE} ${opts.ttl} ${SETTINGS};`;
+}
+/**
+ * 删除表
+ * @param tableName 表名
+ */
+export function DeleteTable(tableName: string) {
+    return "DROP TABLE IF EXISTS " + tableName + ";";
 }
 /**
  * 从对象到sql
