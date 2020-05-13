@@ -27,4 +27,9 @@ module.exports = {
         reset: "",
         url: "mongodb://l-fe2.dev.bj6.daling.com:27017",
     },
+    //clickhouse配置
+    chouse: {
+        url: "http://l-fe1.dev.bj6.daling.com",
+        port: 8123,
+    },
 };
