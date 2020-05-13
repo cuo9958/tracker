@@ -6,6 +6,9 @@ const BigDataModel: ModelObject = {
     id: {
         type: DataType.int,
     },
+    title: {
+        type: DataType.string,
+    },
     test: {
         type: DataType.string,
         default: "",
@@ -24,6 +27,7 @@ const BigData = {
             partition: "toYYYYMM(createTime)",
             order: ["id"],
             ttl: getTTL("createTime", 1, "MONTH"),
+            sync: false,
         });
 
         try {

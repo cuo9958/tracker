@@ -87,7 +87,7 @@ interface ICreateTable {
  * @param ttl 过期时间
  */
 export function CreateTable(opts: ICreateTable) {
-    const PARTITION = opts.partition ? "PARTITION BY" + opts.partition : "";
+    const PARTITION = opts.partition ? "PARTITION BY " + opts.partition : "";
     const ORDER = opts.order && opts.order.length > 0 ? "ORDER BY (" + opts.order.join(",") + ")" : "";
     const SAMPLE = opts.sample ? "SAMPLE BY " + opts.sample : "";
     const SETTINGS = opts.settings ? "SETTINGS " + opts.settings : "";
