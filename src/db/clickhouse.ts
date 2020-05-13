@@ -204,10 +204,25 @@ export function getEnhine(name: EnhineEnum, data1 = "", data2 = "") {
 export function getTTL(name: string, len: number, type: "MONTH") {
     return `TTL ${name} + INTERVAL ${len} ${type}`;
 }
-
-export function Query(tableName: string, obj: object, limit?: number) {
-    let sql = "select * from " + tableName;
-
+/**
+ * 查询表
+ * @param tableName 表名
+ * @param obj 对象
+ * @param attr 字段
+ * @param limit 数量
+ */
+export function Query(tableName: string, obj?: object, attr?: string[], limit?: number) {
+    let attrs = attr ? attr.join(",") : "*";
+    let sql = "select " + attrs + " from " + tableName;
+    let where = "";
+    if (obj) {
+        const list: string[] = [];
+        for (const key in obj) {
+            const tmp = typeof obj[key] === "string" ? "'" + obj[key] + "'" : obj[key];
+            list.push("`" + key + "`=" + tmp);
+        }
+        if (list.length > 0) sql += " where " + where;
+    }
     if (limit) {
         sql += " LIMIT " + limit;
     }
