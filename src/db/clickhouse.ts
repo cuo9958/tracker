@@ -1,5 +1,6 @@
 import { ClickHouse } from "clickhouse";
 import config from "config";
+import nanoid from "nanoid/";
 
 interface ICFG {
     url: string;
@@ -117,6 +118,7 @@ export function getBody(model: any) {
         }
         list.push(tmp);
     }
+    list.push("id " + DataType.string);
     return list.join(",");
 }
 
@@ -233,4 +235,32 @@ export function Query(tableName: string, obj?: object, attr?: string[], limit?: 
         sql += " LIMIT " + limit;
     }
     return queryClickHouse(sql);
+}
+
+export function Insert(tableName: string, obj: object, data?: any) {
+    let listKey: string[] = [];
+    let listValue: Array<string | number> = [];
+    for (const key in obj) {
+        const v = obj[key];
+        if (typeof v === "string") {
+            listKey.push(key);
+            listValue.push(`'${v}'`);
+        }
+        if (typeof v === "number") {
+            listKey.push(key);
+            listValue.push(v);
+        }
+    }
+    listKey.push("id");
+    listValue.push(`'${nanoid.nanoid()}'`);
+    let sql = `INSERT INTO ${tableName} (${listKey.join(",")}) VALUES(${listValue.join(",")});`;
+    console.log(sql);
+    return insertClickHouse(sql, data);
+}
+
+//show databases;
+//show tables;
+
+export function getUUIDv4() {
+    return "SELECT generateUUIDv4()";
 }

@@ -1,1 +1,1 @@
-declare module 'ldap-authentication';
+declare module "ldap-authentication";

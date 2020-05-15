@@ -11,8 +11,22 @@
         <input type="button" value="异常3" onclick="message3()" />
         <input type="button" value="异常4" onclick="message4()" />
         <input type="button" value="测试发送消息" onclick="postErr()" />
-
+        <input type="button" value="测试发送消息2" onclick="postMsg()" />
+        <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script>
+            function postMsg() {
+                $.post("http://127.0.0.1:18630/api_track/log", {
+                    title: "测试标题",
+                    desc: "测试的备注",
+                    uid: "aaa234534656",
+                    token: "adwadwdw",
+                    version: "1.0.1",
+                    meta: {
+                        test: 1,
+                    },
+                });
+            }
+
             function postErr() {
                 const obj = {};
                 const xhr = new XMLHttpRequest();
