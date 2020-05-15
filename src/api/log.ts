@@ -6,7 +6,6 @@ const router = new Router();
 
 //接受日志
 router.post("/", CROS, function (ctx, next) {
-    console.log(ctx.request.body);
     const headers = new Map();
     for (const key in ctx.headers) {
         const head = ctx.headers[key];
@@ -44,6 +43,7 @@ router.post("/", CROS, function (ctx, next) {
         data,
         version,
     };
+    console.log(obj);
     BigDataModel.insert(obj).catch((err) => console.log(err));
     ctx.body = obj;
 });

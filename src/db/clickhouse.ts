@@ -1,6 +1,7 @@
 import { ClickHouse } from "clickhouse";
 import config from "config";
-import nanoid from "nanoid/";
+import nanoid from "nanoid";
+import { DateFormart } from "../utils/date";
 
 interface ICFG {
     url: string;
@@ -249,6 +250,10 @@ export function Insert(tableName: string, obj: object, data?: any) {
         if (typeof v === "number") {
             listKey.push(key);
             listValue.push(v);
+        }
+        if (v.constructor === Date) {
+            listKey.push(key);
+            listValue.push(`'${DateFormart(v, "yyyy-MM-dd")}'`);
         }
     }
     listKey.push("id");

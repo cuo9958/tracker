@@ -35,7 +35,7 @@ const BigDataModel: ModelObject = {
         type: DataType.string,
     },
     timeSpan: {
-        type: DataType.Int(16),
+        type: DataType.Int(64),
     },
     //创建时间
     createTime: {
@@ -58,7 +58,7 @@ const BigData = {
             model: BigDataModel,
             enhine: getEnhine(EnhineEnum.MergeTree),
             partition: "toYYYYMM(createTime)",
-            order: ["id"],
+            order: ["id", "createTime"],
             ttl: getTTL("createTime", 1, "MONTH"),
         });
         try {
@@ -76,6 +76,6 @@ const BigData = {
     },
 };
 
-BigData.init();
+// BigData.init(true);
 
 export default BigData;
