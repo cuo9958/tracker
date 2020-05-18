@@ -3,7 +3,7 @@ import CROS from "../middleware/cros";
 import { initAgent } from "../utils/userAgent";
 import BigDataModel from "../model/BigData";
 
-const router: Router = new Router();
+const router = new Router();
 
 //接受日志
 router.post("/", CROS, function (ctx, next) {
