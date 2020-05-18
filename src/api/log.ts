@@ -1,5 +1,6 @@
 import Router from "koa-router";
 import CROS from "../middleware/cros";
+import { initAgent } from "../utils/userAgent";
 import BigDataModel from "../model/BigData";
 
 const router = new Router();
@@ -14,7 +15,7 @@ router.post("/", CROS, function (ctx, next) {
         }
     }
     let ip = headers.get("x-real-ip") || ctx.ip;
-    const userAgent = headers.get("user-agent");
+    const userAgent: string = headers.get("user-agent");
     const token = headers.get("token") || "";
     const url = headers.get("referer");
     if (!token) {
@@ -31,6 +32,8 @@ router.post("/", CROS, function (ctx, next) {
     if (!/[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/.test(ip)) {
         ip = "0.0.0.0";
     }
+    const browerData = initAgent(userAgent);
+
     const obj = {
         title,
         uid,
@@ -42,6 +45,8 @@ router.post("/", CROS, function (ctx, next) {
         url,
         data,
         version,
+        sys: browerData.sys,
+        os: browerData.os,
     };
     console.log(obj);
     BigDataModel.insert(obj).catch((err) => console.log(err));

@@ -37,6 +37,14 @@ const BigDataModel: ModelObject = {
     timeSpan: {
         type: DataType.Int(64),
     },
+    //系统
+    sys: {
+        type: DataType.string,
+    },
+    //浏览器
+    os: {
+        type: DataType.string,
+    },
     //创建时间
     createTime: {
         type: DataType.date,
