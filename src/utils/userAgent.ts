@@ -42,16 +42,14 @@ export function initAgent(userAgent: string): InitBack {
 
     if (obj.os.includes("chrome")) {
         obj.os = "谷歌浏览器" + obj.os;
-    }
-    if (str.includes("firefox")) {
+    } else if (str.includes("firefox")) {
         obj.os = "火狐浏览器" + list[list.length - 1];
-    }
-    if (str.includes("safari")) {
+    } else if (str.includes("safari")) {
         obj.os = "Safari浏览器" + list[list.length - 1];
     }
     //Opera
     if (str.includes("opera")) {
-        obj.os = "Safari浏览器" + list[0];
+        obj.os = "Operai浏览器" + list[0];
     }
     //QQBrowser
     if (str.includes("qqbrowser")) {

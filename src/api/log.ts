@@ -48,9 +48,9 @@ router.post("/", CROS, function (ctx, next) {
         sys: browerData.sys,
         os: browerData.os,
     };
-    console.log(obj);
     BigDataModel.insert(obj).catch((err) => console.log(err));
-    ctx.body = obj;
+    // ctx.body = obj;
+    ctx.body = "ok";
 });
 //接收警告
 //接收错误
