@@ -1,12 +1,13 @@
 {
-    "apps": [{
-        "name": "tracker",
-        "script": "dist/index.js",
-        "args": [],
-        "env": {
-            "PORT": "18630",
-            "NODE_ENV": "development",
-            "SERVER_ENV": "dev"
+    "apps": [
+        {
+            "name": "tracker",
+            "script": "dist/index.js",
+            "args": [],
+            "env": {
+                "PORT": "18630",
+                "NODE_ENV": "development"
+            }
         }
-    }]
+    ]
 }
