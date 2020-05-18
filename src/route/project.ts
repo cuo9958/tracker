@@ -28,7 +28,7 @@ router.get("/:id", function (ctx: IRouterContext, next) {
 //增加或者修改项目内容
 router.post("/:id", function (ctx: IRouterContext, next) {
     const id = ctx.params.id;
-    const { title } = ctx.request.body;
+    const { title } = ctx.request.body || {};
 
     const model = {
         title,
