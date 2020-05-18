@@ -1,5 +1,6 @@
 import Router from "koa-router";
 import CROS from "../middleware/cros";
+import KoaBody from "koa-body";
 import { initAgent } from "../utils/userAgent";
 import BigDataModel from "../model/BigData";
 
