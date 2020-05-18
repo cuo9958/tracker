@@ -6,7 +6,7 @@
             "args": [],
             "env": {
                 "PORT": "18630",
-                "NODE_ENV": "development"
+                "NODE_ENV": "production"
             }
         }
     ]
