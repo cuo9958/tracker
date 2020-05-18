@@ -22,7 +22,7 @@ router.post("/", CROS, function (ctx, next) {
     if (!token) {
         console.log("无法根据token拿到项目、账户id");
     }
-    const { title, desc, uid, meta, version } = ctx.request.body || {};
+    const { title, desc, uid, meta, version } = ctx.request.body;
 
     const createTime = new Date();
     const timeSpan = createTime.getTime();
