@@ -59,10 +59,10 @@ export default {
                 sql += " and platform='" + searchData.platform + "'";
             }
             if (searchData.clientid) {
-                sql += " and platform='" + searchData.clientid + "'";
+                sql += " and clientid='" + searchData.clientid + "'";
             }
             if (searchData.version) {
-                sql += " and platform='" + searchData.version + "'";
+                sql += " and version='" + searchData.version + "'";
             }
         }
         if (pageIndex) {
