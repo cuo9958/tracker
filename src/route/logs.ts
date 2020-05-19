@@ -1,28 +1,34 @@
 import Router from "koa-router";
-import { IRouterContext } from "../middleware/resp";
 import LogCollectionModel from "../model/LogCollection";
-import CROS from "../middleware/cros";
 
 const router = new Router();
 
 //获取日志列表
-router.get("/", CROS, async (ctx, next) => {
-    console.log("查询");
-    const { start = 0 } = ctx.query;
-
+router.get("/", async (ctx, next) => {
+    const { start = 0, title, platform, clientid, version } = ctx.query;
     let list: any[] = [];
     try {
-        let obj = {};
+        let obj = {
+            title,
+            platform,
+            clientid,
+            version,
+        };
         list = await LogCollectionModel.search(start, obj);
+        ctx.body = {
+            code: 1,
+            data: list,
+        };
     } catch (error) {
         console.log(error);
+        ctx.body = {
+            code: 0,
+            msg: error.message,
+        };
     }
-
-    ctx.body = {
-        data: list,
-    };
 });
-router.get("/clear", CROS, async (ctx, next) => {
+//清空数据库
+router.get("/clear", async (ctx, next) => {
     try {
     } catch (error) {
         console.log(error);
