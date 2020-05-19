@@ -34,25 +34,15 @@ router.post("/", CROS, function (ctx, next) {
     }
     const browerData = initAgent(userAgent);
 
-    const obj = {
-        title,
-        uid,
-        desc,
-        ip,
-        userAgent,
-        createTime,
-        timeSpan,
-        url,
-        data,
-        version,
-        sys: browerData.sys,
-        os: browerData.os,
-    };
     const platform = headers.get("platform");
+    const clientid = headers.get("clientid");
+    
     LogCollectionModel.insert(
         {
             title,
             platform: platform,
+            version,
+            clientid,
         },
         {
             desc,
