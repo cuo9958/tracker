@@ -6,12 +6,12 @@
         <title>测试网页</title>
     </head>
     <body>
-        <input type="button" value="异常1" onclick="message1()" />
-        <input type="button" value="异常2" onclick="message2()" />
+        <input type="button" value="查询" onclick="message1()" />
+        <input type="button" value="清空" onclick="message2()" />
         <input type="button" value="异常3" onclick="message3()" />
         <input type="button" value="异常4" onclick="message4()" />
         <input type="button" value="测试发送消息" onclick="postErr()" />
-        <input type="button" value="测试发送消息2" onclick="postMsg()" />
+        <input type="button" value="添加" onclick="postMsg()" />
         <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script>
             function postMsg() {
@@ -70,10 +70,10 @@
                 }
             }
             function message1() {
-                aalert("hello!");
+                $.get("http://127.0.0.1:18630/api/logs");
             }
             function message2() {
-                throw new Error("hello");
+                $.get("http://127.0.0.1:18630/api/logs/clear");
             }
             function message3() {
                 console.log(sss);

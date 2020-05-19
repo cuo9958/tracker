@@ -1,7 +1,10 @@
 import Router from "koa-router";
 import { IRouterContext } from "../middleware/resp";
+import { sendError, sendSuccess } from "../middleware/resp";
 
 const router = new Router();
+
+router.all("", sendError, sendSuccess);
 
 //获取项目列表
 router.get("/", async (ctx: IRouterContext, next) => {

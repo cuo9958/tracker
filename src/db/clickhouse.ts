@@ -213,6 +213,21 @@ export function getEnhine(name: EnhineEnum, data1 = "", data2 = "") {
 export function getTTL(name: string, len: number, type: "MONTH") {
     return `TTL ${name} + INTERVAL ${len} ${type}`;
 }
+// SELECT [DISTINCT] expr_list
+//     [FROM [db.]table | (subquery) | table_function] [FINAL]
+//     [SAMPLE sample_coeff]
+//     [ARRAY JOIN ...]
+//     [GLOBAL] ANY|ALL INNER|LEFT JOIN (subquery)|table USING columns_list
+//     [PREWHERE expr]
+//     [WHERE expr]
+//     [GROUP BY expr_list] [WITH TOTALS]
+//     [HAVING expr]
+//     [ORDER BY expr_list]
+//     [LIMIT [n, ]m]
+//     [UNION ALL ...]
+//     [INTO OUTFILE filename]
+//     [FORMAT format]
+//     [LIMIT n BY columns]
 /**
  * 查询表
  * @param tableName 表名

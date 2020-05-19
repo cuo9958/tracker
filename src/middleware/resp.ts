@@ -14,7 +14,7 @@ export type IRouterContext = Koa.ParameterizedContext &
  * 提供返回正确数据的方式
  * @param ctx ctx
  */
-export function sendSuccess(ctx: any, next) {
+export async function sendSuccess(ctx: any, next) {
     const now = Date.now();
 
     ctx.Success = function (data = "ok") {
@@ -24,14 +24,14 @@ export function sendSuccess(ctx: any, next) {
             t: Date.now() - now,
         };
     };
-    next();
+    await next();
 }
 
 /**
  * 提供返回默认错误和自定义code的形式
  * @param ctx ctx
  */
-export function sendError(ctx, next) {
+export async function sendError(ctx, next) {
     const now = Date.now();
 
     ctx.Error = function (msg: string, code = 0) {
@@ -41,5 +41,5 @@ export function sendError(ctx, next) {
             t: Date.now() - now,
         };
     };
-    next();
+    await next();
 }

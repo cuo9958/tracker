@@ -1,8 +1,7 @@
 import Router from "koa-router";
 import CROS from "../middleware/cros";
-import KoaBody from "koa-body";
 import { initAgent } from "../utils/userAgent";
-import BigDataModel from "../model/BigData";
+import LogCollectionModel from "../model/LogCollection";
 
 const router = new Router();
 
@@ -19,9 +18,9 @@ router.post("/", CROS, function (ctx, next) {
     const userAgent: string = headers.get("user-agent");
     const token = headers.get("token") || "";
     const url = headers.get("referer");
-    if (!token) {
-        console.log("无法根据token拿到项目、账户id");
-    }
+    // if (!token) {
+    //     console.log("无法根据token拿到项目、账户id");
+    // }
     const { title, desc, uid, meta, version } = ctx.request.body as any;
 
     const createTime = new Date();
@@ -49,7 +48,22 @@ router.post("/", CROS, function (ctx, next) {
         sys: browerData.sys,
         os: browerData.os,
     };
-    BigDataModel.insert(obj).catch((err) => console.log(err));
+    const platform = headers.get("platform");
+    LogCollectionModel.insert(
+        {
+            title,
+            platform: platform,
+        },
+        {
+            desc,
+            meta: data,
+            ip,
+            userAgent,
+            url,
+            os: browerData.os,
+            createTime: Date.now(),
+        }
+    );
     // ctx.body = obj;
     ctx.body = "ok";
 });

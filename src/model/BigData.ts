@@ -34,9 +34,6 @@ const BigDataModel: ModelObject = {
     userAgent: {
         type: DataType.string,
     },
-    timeSpan: {
-        type: DataType.Int(64),
-    },
     //系统
     sys: {
         type: DataType.string,
@@ -44,6 +41,9 @@ const BigDataModel: ModelObject = {
     //浏览器
     os: {
         type: DataType.string,
+    },
+    timeSpan: {
+        type: DataType.Int(64),
     },
     //创建时间
     createTime: {
@@ -66,7 +66,7 @@ const BigData = {
             model: BigDataModel,
             enhine: getEnhine(EnhineEnum.MergeTree),
             partition: "toYYYYMM(createTime)",
-            order: ["id", "createTime"],
+            order: ["id", "timeSpan"],
             ttl: getTTL("createTime", 1, "MONTH"),
         });
         try {
