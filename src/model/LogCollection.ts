@@ -68,6 +68,7 @@ export default {
         if (pageIndex) {
             sql += ` limit ${limit} offset ${pageIndex * limit}`;
         }
+        console.log(sql);
         const res = await db.query(sql);
         const list: any[] = [];
         res.forEach((item) => {
