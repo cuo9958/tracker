@@ -58,7 +58,7 @@ router.post("/", CROS, function (ctx, next) {
 //get日志
 router.get("/", function (ctx) {
     const { token, referer, version, platform, clientid } = ctx.headers;
-    let ip = ctx.headers("x-real-ip") || ctx.ip;
+    let ip = ctx.headers["x-real-ip"] || ctx.ip;
     const userAgent: string = ctx.headers["user-agent"] || "";
     const url = referer;
     // if (!token) {
