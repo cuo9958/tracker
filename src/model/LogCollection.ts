@@ -65,6 +65,7 @@ export default {
                 sql += " and version='" + searchData.version + "'";
             }
         }
+        sql += " order by time desc";
         if (pageIndex) {
             sql += ` limit ${limit} offset ${pageIndex * limit}`;
         }
