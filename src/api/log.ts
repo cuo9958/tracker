@@ -23,8 +23,6 @@ router.post("/", CROS, function (ctx, next) {
     // }
     const { title, desc, uid, meta, version } = ctx.request.body as any;
 
-    const createTime = new Date();
-    const timeSpan = createTime.getTime();
     let data = "";
     if (meta) {
         data = JSON.stringify(meta);
@@ -36,7 +34,7 @@ router.post("/", CROS, function (ctx, next) {
 
     const platform = headers.get("platform");
     const clientid = headers.get("clientid");
-    
+
     LogCollectionModel.insert(
         {
             title,
