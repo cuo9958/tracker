@@ -7,21 +7,14 @@ const router = new Router();
 
 //接受日志
 router.post("/", CROS, function (ctx, next) {
-    const headers = new Map();
-    for (const key in ctx.headers) {
-        const head = ctx.headers[key];
-        if (head != undefined) {
-            headers.set(key, head);
-        }
-    }
-    let ip = headers.get("x-real-ip") || ctx.ip;
-    const userAgent: string = headers.get("user-agent");
-    const token = headers.get("token") || "";
-    const url = headers.get("referer");
+    let ip = ctx.headers["x-real-ip"] || ctx.ip;
+    const userAgent: string = ctx.headers["user-agent"] || "";
+    const url = ctx.headers["referer"] || "";
+
+    const { title, desc, meta, version, token, platform, clientid } = ctx.request.body as any;
     // if (!token) {
     //     console.log("无法根据token拿到项目、账户id");
     // }
-    const { title, desc, meta, version } = ctx.request.body as any;
 
     let data = "";
     if (meta) {
@@ -31,9 +24,6 @@ router.post("/", CROS, function (ctx, next) {
         ip = "0.0.0.0";
     }
     const browerData = initAgent(userAgent);
-
-    const platform = headers.get("platform");
-    const clientid = headers.get("clientid");
 
     LogCollectionModel.insert(
         {
