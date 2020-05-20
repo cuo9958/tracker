@@ -21,7 +21,7 @@ router.post("/", CROS, function (ctx, next) {
     // if (!token) {
     //     console.log("无法根据token拿到项目、账户id");
     // }
-    const { title, desc, uid, meta, version } = ctx.request.body as any;
+    const { title, desc, meta, version } = ctx.request.body as any;
 
     let data = "";
     if (meta) {
@@ -53,6 +53,10 @@ router.post("/", CROS, function (ctx, next) {
         }
     );
     // ctx.body = obj;
+    ctx.body = "ok";
+});
+//测试
+router.get("/test", CROS, function (ctx) {
     ctx.body = "ok";
 });
 //接收警告
