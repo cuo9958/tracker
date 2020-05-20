@@ -6,6 +6,7 @@ const app = new Koa();
 
 app.use(
     KoaBody({
+        jsonLimit: "1mb",
         // multipart: true,
         // formidable: {
         //     maxFieldsSize: 5 * 1024 * 1024,
