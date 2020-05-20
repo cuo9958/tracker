@@ -55,6 +55,46 @@ router.post("/", CROS, function (ctx, next) {
     // ctx.body = obj;
     ctx.body = "ok";
 });
+//get日志
+router.get("/", function (ctx) {
+    const { token, referer, version, platform, clientid } = ctx.headers;
+    let ip = ctx.headers("x-real-ip") || ctx.ip;
+    const userAgent: string = ctx.headers["user-agent"] || "";
+    const url = referer;
+    // if (!token) {
+    //     console.log("无法根据token拿到项目、账户id");
+    // }
+    const { title, desc, meta } = ctx.query;
+
+    let data = "";
+    if (meta) {
+        data = JSON.stringify(meta);
+    }
+    if (!/[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/.test(ip)) {
+        ip = "0.0.0.0";
+    }
+    const browerData = initAgent(userAgent);
+
+    LogCollectionModel.insert(
+        {
+            title,
+            platform: platform,
+            version,
+            clientid,
+        },
+        {
+            desc,
+            meta: data,
+            ip,
+            userAgent,
+            url,
+            os: browerData.os,
+            createTime: Date.now(),
+        }
+    );
+    // ctx.body = obj;
+    ctx.body = "ok";
+});
 //测试
 router.get("/test", CROS, function (ctx) {
     ctx.body = "ok";
