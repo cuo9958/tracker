@@ -57,14 +57,14 @@ router.post("/", CROS, function (ctx, next) {
 });
 //get日志
 router.get("/", function (ctx) {
-    const { token, referer, version, platform, clientid } = ctx.headers;
+    const { token, referer } = ctx.headers;
     let ip = ctx.headers["x-real-ip"] || ctx.ip;
     const userAgent: string = ctx.headers["user-agent"] || "";
     const url = referer;
     // if (!token) {
     //     console.log("无法根据token拿到项目、账户id");
     // }
-    const { title, desc, meta } = ctx.query;
+    const { title, desc, meta, version, platform, clientid } = ctx.query;
 
     let data = "";
     if (meta) {
