@@ -67,7 +67,7 @@ export default {
         }
         sql += " order by time desc";
         if (pageIndex) {
-            sql += ` limit ${limit} offset ${pageIndex * limit}`;
+            sql += ` limit ${limit} offset ${pageIndex * limit} tz('Asia/Shanghai')`;
         }
         console.log(sql);
         const res = await db.query(sql);

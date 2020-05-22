@@ -19,6 +19,7 @@
     "cron": "^1.8.2",
     "influx": "^5.5.1",
     "ioredis": "^4.16.1",
+    "clickhouse": "^2.1.2",
     "koa": "^2.11.0",
     "koa-body": "^4.1.1",
     "koa-router": "^8.0.8",

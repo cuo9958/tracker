@@ -34,4 +34,9 @@ module.exports = {
         // username:"",
         //password:"",
     },
+    //clickhouse配置
+    chouse: {
+        url: "http://l-fe1.dev.bj6.daling.com",
+        port: 8123,
+    },
 };
