@@ -8,13 +8,17 @@ const router = new Router();
 
 //get日志
 router.get("/", function (ctx) {
+    ctx.set("Access-Control-Allow-Origin", "*");
+    ctx.set("Access-Control-Allow-Headers", "token");
+
     let ip = ctx.headers["x-real-ip"] || ctx.ip;
     const userAgent: string = ctx.headers["user-agent"] || "";
     const url = ctx.headers.referer;
+    const token = ctx.headers.token;
     // if (!token) {
     //     console.log("无法根据token拿到项目、账户id");
     // }
-    const { title, desc, meta, version, platform, clientid, token } = ctx.query;
+    const { title, desc, meta, version, platform, clientid } = ctx.query;
 
     let data = "";
     if (meta) {
@@ -23,25 +27,7 @@ router.get("/", function (ctx) {
     if (!/[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/.test(ip)) {
         ip = "0.0.0.0";
     }
-    const browerData = initAgent(userAgent);
 
-    // LogCollectionModel.insert(
-    //     {
-    //         title,
-    //         platform: platform,
-    //         version,
-    //         clientid,
-    //     },
-    //     {
-    //         desc,
-    //         meta: data,
-    //         ip,
-    //         userAgent,
-    //         url,
-    //         os: browerData.os,
-    //         createTime: Date.now(),
-    //     }
-    // );
     BigDataModel.insert({
         title,
         platform,
@@ -59,11 +45,14 @@ router.get("/", function (ctx) {
 
 //接受日志
 router.post("/", CROS, function (ctx, next) {
+    ctx.set("Access-Control-Allow-Origin", "*");
+    ctx.set("Access-Control-Allow-Headers", "token");
+
     let ip = ctx.headers["x-real-ip"] || ctx.ip;
     const userAgent: string = ctx.headers["user-agent"] || "";
     const url = ctx.headers["referer"] || "";
-
-    const { title, desc, meta, version, token, platform, clientid } = ctx.request.body as any;
+    const token = ctx.headers.token;
+    const { title, desc, meta, version, platform, clientid } = ctx.request.body as any;
     // if (!token) {
     //     console.log("无法根据token拿到项目、账户id");
     // }
@@ -75,25 +64,7 @@ router.post("/", CROS, function (ctx, next) {
     if (!/[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/.test(ip)) {
         ip = "0.0.0.0";
     }
-    const browerData = initAgent(userAgent);
 
-    // LogCollectionModel.insert(
-    //     {
-    //         title,
-    //         platform: platform,
-    //         version,
-    //         clientid,
-    //     },
-    //     {
-    //         desc,
-    //         meta: data,
-    //         ip,
-    //         userAgent,
-    //         url,
-    //         os: browerData.os,
-    //         createTime: Date.now(),
-    //     }
-    // );
     BigDataModel.insert({
         title,
         platform,

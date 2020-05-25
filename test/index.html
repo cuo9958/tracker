@@ -15,18 +15,23 @@
         <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script>
             function postMsg() {
-                $.post("http://127.0.0.1:18630/api_track/log", {
-                    title: "测试标题" + Math.random(),
-                    desc: "测试的备注",
-                    uid: "aaa234534656",
-                    token: "adwadwdw",
-                    version: "1.0.1",
-                    platform: "wxapp",
-                    clientid: "24353f3f434",
-                    meta: {
-                        test: 1,
-                    },
-                });
+                // $.post("http://127.0.0.1:18630/api_track/log", {
+                //     title: "测试标题" + Math.random(),
+                //     desc: "测试的备注",
+                //     uid: "aaa234534656",
+                //     token: "adwadwdw",
+                //     version: "1.0.1",
+                //     platform: "wxapp",
+                //     clientid: "24353f3f434",
+                //     meta: {
+                //         test: 1,
+                //     },
+                // });
+                var xhr = new XMLHttpRequest();
+
+                xhr.open("GET", "http://127.0.0.1:18630/api_track/log?title=123");
+                xhr.setRequestHeader("token", "123");
+                xhr.send(null);
             }
 
             function postErr() {
@@ -35,27 +40,27 @@
                 xhr.open("POST", "http://127.0.0.1:18630/api_track/test");
                 xhr.send(JSON.stringify(obj));
             }
-            var orgError = window.onerror;
+            // var orgError = window.onerror;
             window.onerror = function (msg, url, line, col, error) {
                 var newMsg = msg;
                 console.log(msg, url, line, col, error);
                 orgError && orgError.apply(global, arguments);
             };
-            var nativeRequest = XMLHttpRequest;
-            window.XMLHttpRequest = function () {
-                var xml = new nativeRequest();
-                xml.tracker = {};
-                xml._tracker_open = xml.open;
-                xml.addEventListener("error", reqerr);
-                xml.addEventListener("timeout", reqerr);
-                xml.addEventListener("readystatechange", reqerr);
-                xml.open = function (r, t, a, o, n) {
-                    xml.tracker._request_method = r;
-                    xml.tracker._request_url = t;
-                    return xml._tracker_open(r, t, a, o, n);
-                };
-                return xml;
-            };
+            // var nativeRequest = XMLHttpRequest;
+            // window.XMLHttpRequest = function () {
+            //     var xml = new nativeRequest();
+            //     xml.tracker = {};
+            //     xml._tracker_open = xml.open;
+            //     xml.addEventListener("error", reqerr);
+            //     xml.addEventListener("timeout", reqerr);
+            //     xml.addEventListener("readystatechange", reqerr);
+            //     xml.open = function (r, t, a, o, n) {
+            //         xml.tracker._request_method = r;
+            //         xml.tracker._request_url = t;
+            //         return xml._tracker_open(r, t, a, o, n);
+            //     };
+            //     return xml;
+            // };
             function reqerr(r) {
                 var t = r.target;
                 console.log("reqerr", r);
