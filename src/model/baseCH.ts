@@ -47,7 +47,6 @@ interface IOpts {
     ttleType?: string;
     isCreate?: boolean;
     order?: string[];
-    indexKey?: string;
 }
 
 interface IQueryOpts {
@@ -55,6 +54,9 @@ interface IQueryOpts {
     model: object;
     //返回的字段名
     attrs?: string[];
+    offset?: number;
+    limit?: number;
+    order?: string;
 }
 
 //计算字符串的hash，返回UInt64。sipHash64
@@ -90,20 +92,14 @@ export default class Test extends Base {
         if (opts.order) {
             this.order = opts.order.concat("id");
         }
-        if (opts.indexKey) {
-            this.indexKey = opts.indexKey;
-        }
     }
-    dbName = "test_db";
-    private indexName = "tit";
-    //title,排序标准
-    private indexKey = "";
+    private dbName = "test_db";
     private isCreate = false;
     private TTL = 30;
     private TTL_TYPE = "DAY";
     private engine = "MergeTree()";
     private partition = "toYYYYMM(createTime)";
-    private order: string[] = ["id"];
+    private order: string[] = ["createTime"];
     private columns: IColumn[] = [];
     /**
      * 初始化表
@@ -122,6 +118,7 @@ export default class Test extends Base {
      */
     createDataBase(databaseName: string) {
         const sql = `CREATE DATABASE IF NOT EXISTS ${databaseName}`;
+        return insertClickHouse(sql);
     }
     /**
      * 创建表,自动增加id、createTime字段
@@ -132,8 +129,8 @@ export default class Test extends Base {
             createTime DateTime DEFAULT now(),
             ${this.getBodyList(this.columns)}
         ) ENGINE=${this.engine} PARTITION BY ${this.partition} ORDER BY (${this.order.join(",")}) TTL createTime + INTERVAL ${this.TTL} ${this.TTL_TYPE}`;
-
         console.log("建表", sql);
+        return insertClickHouse(sql);
     }
     /**
      * 删除表
@@ -141,12 +138,14 @@ export default class Test extends Base {
     delTable() {
         const sql = `DROP TABLE IF EXISTS ${this.dbName};`;
         console.log(sql);
+        return insertClickHouse(sql);
     }
     /**
      * 查看表结构
      */
     getTableInfo() {
         const sql = `DESCRIBE TABLE ${this.dbName}`;
+        return queryClickHouse(sql);
     }
     /**
      * 修改表字段
@@ -157,6 +156,7 @@ export default class Test extends Base {
     modifyColumn(key: string, op: "ADD" | "DROP" | "MODIFY", type: string) {
         const sql = `ALTER TABLE ${this.dbName} ${op} COLUMN ${key} ${type}`;
         console.log("修改表", sql);
+        return insertClickHouse(sql);
     }
     //添加
     insert(obj: any) {
@@ -171,6 +171,7 @@ export default class Test extends Base {
 
         const sql = `INSERT INTO ${this.dbName} (${list1.join(",")}) VALUES (${list2.join(",")});`;
         console.log("添加", sql);
+        return insertClickHouse(sql);
     }
     /**
      * 批量插入
@@ -225,7 +226,18 @@ export default class Test extends Base {
         if (list.length > 0) {
             where = "where " + list.join(" and ");
         }
-        const sql = `select ${attrs} from ${this.dbName} ${where}`;
+        let order = "";
+        if (data.order) {
+            order = "order by " + order;
+        }
+        let limit = "";
+        if (data.limit) {
+            limit = "limit " + limit;
+            if (data.offset) {
+                limit += "," + data.offset;
+            }
+        }
+        const sql = `select ${attrs} from ${this.dbName} ${where} ${order} ${limit}`;
         console.log("查询", sql);
         const data1 = await queryClickHouse(sql);
         console.log(data1);
@@ -233,30 +245,31 @@ export default class Test extends Base {
     //个数
     count(data: any = {}) {
         const sql = `select count() from ${this.dbName}`;
+        return queryClickHouse(sql);
     }
     //总计
     sum(key: string) {
         const sql = `SELECT sum(${key}) FROM ${this.dbName}`;
+        return queryClickHouse(sql);
     }
     min(key: string) {
         const sql = `SELECT min(${key}) FROM ${this.dbName}`;
+        return queryClickHouse(sql);
     }
     max(key: string) {
         const sql = `SELECT max(${key}) FROM${this.dbName}`;
+        return queryClickHouse(sql);
     }
     //查询val，返回arg1
     argMin(arg1: string, val: string) {
         const sql = `SELECT argMin(${arg1}, ${val}) FROM salary`;
+        return queryClickHouse(sql);
     }
     argMax(arg1: string, val: string) {
         const sql = `SELECT argMax(${arg1}, ${val}) FROM salary`;
+        return queryClickHouse(sql);
     }
 
-    /**
-     * 解析查询条件
-     * @param obj 对象
-     */
-    private getQueryList(obj: any) {}
     /**
      * 生成字段和值
      * @param names 字段名
@@ -296,7 +309,6 @@ export default class Test extends Base {
     private getColumn(key: string) {
         let info: IColumn | undefined;
         this.columns.forEach((item) => {
-            console.log(item);
             if (item.name === key) info = item;
         });
         return info;
@@ -316,23 +328,23 @@ export default class Test extends Base {
     }
 }
 
-const testDB = new Test("test_db", {
-    ttl: 1,
-    // isCreate: true,
-});
+// const testDB = new Test("test_db", {
+//     ttl: 1,
+//     // isCreate: true,
+// });
 
-const obj = [
-    {
-        name: "test1",
-        type: DataType.string,
-        default: "",
-    },
-    {
-        name: "date2",
-        type: DataType.date,
-    },
-];
-testDB.init(obj);
+// const obj = [
+//     {
+//         name: "test1",
+//         type: DataType.string,
+//         default: "",
+//     },
+//     {
+//         name: "date2",
+//         type: DataType.date,
+//     },
+// ];
+// testDB.init(obj);
 
 // testDB.query();
 
@@ -351,11 +363,11 @@ testDB.init(obj);
 //     },
 // ]);
 
-testDB.query({
-    model: {
-        test1: "222",
-    },
-});
+// testDB.query({
+//     model: {
+//         test1: "222",
+//     },
+// });
 
 // testDB.query({
 //     model: {

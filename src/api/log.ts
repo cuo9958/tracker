@@ -2,8 +2,60 @@ import Router from "koa-router";
 import CROS from "../middleware/cros";
 import { initAgent } from "../utils/userAgent";
 import LogCollectionModel from "../model/LogCollection";
+import BigDataModel from "../model/BigData";
 
 const router = new Router();
+
+//get日志
+router.get("/", function (ctx) {
+    let ip = ctx.headers["x-real-ip"] || ctx.ip;
+    const userAgent: string = ctx.headers["user-agent"] || "";
+    const url = ctx.headers.referer;
+    // if (!token) {
+    //     console.log("无法根据token拿到项目、账户id");
+    // }
+    const { title, desc, meta, version, platform, clientid, token } = ctx.query;
+
+    let data = "";
+    if (meta) {
+        data = JSON.stringify(meta);
+    }
+    if (!/[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/.test(ip)) {
+        ip = "0.0.0.0";
+    }
+    const browerData = initAgent(userAgent);
+
+    // LogCollectionModel.insert(
+    //     {
+    //         title,
+    //         platform: platform,
+    //         version,
+    //         clientid,
+    //     },
+    //     {
+    //         desc,
+    //         meta: data,
+    //         ip,
+    //         userAgent,
+    //         url,
+    //         os: browerData.os,
+    //         createTime: Date.now(),
+    //     }
+    // );
+    BigDataModel.insert({
+        title,
+        platform,
+        version,
+        clientid,
+        desc,
+        meta: data,
+        ip,
+        userAgent,
+        url,
+    });
+    // ctx.body = obj;
+    ctx.body = "ok";
+});
 
 //接受日志
 router.post("/", CROS, function (ctx, next) {
@@ -25,66 +77,38 @@ router.post("/", CROS, function (ctx, next) {
     }
     const browerData = initAgent(userAgent);
 
-    LogCollectionModel.insert(
-        {
-            title,
-            platform: platform,
-            version,
-            clientid,
-        },
-        {
-            desc,
-            meta: data,
-            ip,
-            userAgent,
-            url,
-            os: browerData.os,
-            createTime: Date.now(),
-        }
-    );
+    // LogCollectionModel.insert(
+    //     {
+    //         title,
+    //         platform: platform,
+    //         version,
+    //         clientid,
+    //     },
+    //     {
+    //         desc,
+    //         meta: data,
+    //         ip,
+    //         userAgent,
+    //         url,
+    //         os: browerData.os,
+    //         createTime: Date.now(),
+    //     }
+    // );
+    BigDataModel.insert({
+        title,
+        platform,
+        version,
+        clientid,
+        desc,
+        meta: data,
+        ip,
+        userAgent,
+        url,
+    });
     // ctx.body = obj;
     ctx.body = "ok";
 });
-//get日志
-router.get("/", function (ctx) {
-    const { token, referer } = ctx.headers;
-    let ip = ctx.headers["x-real-ip"] || ctx.ip;
-    const userAgent: string = ctx.headers["user-agent"] || "";
-    const url = referer;
-    // if (!token) {
-    //     console.log("无法根据token拿到项目、账户id");
-    // }
-    const { title, desc, meta, version, platform, clientid } = ctx.query;
 
-    let data = "";
-    if (meta) {
-        data = JSON.stringify(meta);
-    }
-    if (!/[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}/.test(ip)) {
-        ip = "0.0.0.0";
-    }
-    const browerData = initAgent(userAgent);
-
-    LogCollectionModel.insert(
-        {
-            title,
-            platform: platform,
-            version,
-            clientid,
-        },
-        {
-            desc,
-            meta: data,
-            ip,
-            userAgent,
-            url,
-            os: browerData.os,
-            createTime: Date.now(),
-        }
-    );
-    // ctx.body = obj;
-    ctx.body = "ok";
-});
 //测试
 router.get("/test", CROS, function (ctx) {
     ctx.body = "ok";
