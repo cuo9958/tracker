@@ -6,7 +6,6 @@ const router = new Router();
 //获取日志列表
 router.get("/", async (ctx, next) => {
     const { start = 0, title, platform, clientid, version } = ctx.query;
-    let list: any[] = [];
     try {
         let obj = {
             title,
@@ -14,10 +13,10 @@ router.get("/", async (ctx, next) => {
             clientid,
             version,
         };
-        list = await BigDataModel.query(obj, start);
+        const data = await BigDataModel.count(obj, start);
         ctx.body = {
             code: 1,
-            data: list,
+            data,
         };
     } catch (error) {
         console.log(error);

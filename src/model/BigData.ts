@@ -71,9 +71,58 @@ export default {
         return BigData.insert(model);
     },
     query(data: IModel, pageindex: number, limit = 20) {
-        let model = {};
+        let model: any = {};
+        if (data.title) {
+            model.title = {
+                [Op.like]: data.title,
+            };
+        }
+        if (data.platform) {
+            model.platform = data.platform;
+        }
+        if (data.version) {
+            model.version = data.version;
+        }
+        if (data.clientid) {
+            model.clientid = data.clientid;
+        }
         return BigData.query({
             model,
+            limit: limit,
+            offset: pageindex * limit,
         });
     },
+    async count(data: IModel, pageindex: number, limit = 20) {
+        let model: any = {};
+        if (data.title) {
+            model.title = {
+                [Op.like]: data.title,
+            };
+        }
+        if (data.platform) {
+            model.platform = data.platform;
+        }
+        if (data.version) {
+            model.version = data.version;
+        }
+        if (data.clientid) {
+            model.clientid = data.clientid;
+        }
+        const count = await BigData.count({
+            model,
+            limit: limit,
+            offset: pageindex * limit,
+        });
+        const list = await BigData.query({
+            model,
+            limit: limit,
+            offset: pageindex * limit,
+        });
+
+        return {
+            count,
+            list,
+        };
+    },
+    group() {},
 };

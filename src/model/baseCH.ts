@@ -9,6 +9,7 @@ export const Op = {
     gt: "gt",
     lt: "lt",
     in: "in",
+    like: "like",
 };
 //操作符
 const OP = {
@@ -30,6 +31,9 @@ const OP = {
             return ` in ('${list.join("','")}')`;
         }
         return ` in (${list.join(",")})`;
+    },
+    like(v: string) {
+        return ` like '%${v}%'`;
     },
 };
 abstract class Base {
@@ -232,9 +236,9 @@ export default class Test extends Base {
         }
         let limit = "";
         if (data.limit) {
-            limit = "limit " + limit;
+            limit = "limit " + data.limit;
             if (data.offset) {
-                limit += "," + data.offset;
+                limit = `limit ${data.offset},${data.limit}`;
             }
         }
         const sql = `select ${attrs} from ${this.dbName} ${where} ${order} ${limit}`;
@@ -242,9 +246,36 @@ export default class Test extends Base {
         return await queryClickHouse(sql);
     }
     //个数
-    count(data: any = {}) {
-        const sql = `select count() from ${this.dbName}`;
-        return queryClickHouse(sql);
+    async count(data: IQueryOpts) {
+        const list: string[] = [];
+        for (const key in data.model) {
+            const val = data.model[key];
+            const col: IColumn | undefined = this.getColumn(key);
+            if (!col) continue;
+            //有操作符
+            if (typeof val === "object") {
+                for (const o in val) {
+                    if (OP[o]) {
+                        list.push(key + OP[o](val[o], col.type));
+                    }
+                }
+            } else {
+                if (col.type === DataType.string) {
+                    list.push(`${key}='${val}'`);
+                } else {
+                    list.push(`${key}=${val}`);
+                }
+            }
+        }
+        let where = "";
+        if (list.length > 0) {
+            where = "where " + list.join(" and ");
+        }
+
+        const sql = `select count() as count from ${this.dbName} ${where}`;
+        const res: any[] = await queryClickHouse(sql);
+        if (res.length <= 0) return 0;
+        return res[0].count;
     }
     //总计
     sum(key: string) {

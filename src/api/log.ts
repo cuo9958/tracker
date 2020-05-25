@@ -1,10 +1,14 @@
 import Router from "koa-router";
 import CROS from "../middleware/cros";
-import { initAgent } from "../utils/userAgent";
-import LogCollectionModel from "../model/LogCollection";
 import BigDataModel from "../model/BigData";
 
 const router = new Router();
+
+router.options("/", function (ctx) {
+    ctx.set("Access-Control-Allow-Origin", "*");
+    ctx.set("Access-Control-Allow-Headers", "token");
+    ctx.body = "";
+});
 
 //get日志
 router.get("/", function (ctx) {
