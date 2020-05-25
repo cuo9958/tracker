@@ -239,8 +239,7 @@ export default class Test extends Base {
         }
         const sql = `select ${attrs} from ${this.dbName} ${where} ${order} ${limit}`;
         console.log("查询", sql);
-        const data1 = await queryClickHouse(sql);
-        console.log(data1);
+        return await queryClickHouse(sql);
     }
     //个数
     count(data: any = {}) {

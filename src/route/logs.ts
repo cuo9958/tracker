@@ -1,5 +1,5 @@
 import Router from "koa-router";
-import LogCollectionModel from "../model/LogCollection";
+import BigDataModel from "../model/BigData";
 
 const router = new Router();
 
@@ -14,7 +14,7 @@ router.get("/", async (ctx, next) => {
             clientid,
             version,
         };
-        list = await LogCollectionModel.search(start, obj);
+        list = await BigDataModel.query(obj, start);
         ctx.body = {
             code: 1,
             data: list,
