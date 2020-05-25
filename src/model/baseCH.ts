@@ -1,4 +1,4 @@
-import { DataType } from "../db/clickhouse";
+import { DataType, queryClickHouse, insertClickHouse } from "../db/clickhouse";
 /**
  * 自定义数据表，
  * 添加固定参数，uuid,createTime
@@ -196,9 +196,10 @@ export default class Test extends Base {
 
         const sql = `INSERT INTO ${this.dbName} (${list1.join(",")}) VALUES ${list2.join(",")};`;
         console.log("批量插入", sql);
+        return insertClickHouse(sql);
     }
     //基础搜索
-    query(data: IQueryOpts) {
+    async query(data: IQueryOpts) {
         const attrs = data.attrs ? data.attrs.join(",") : "*";
         const list: string[] = [];
         for (const key in data.model) {
@@ -226,6 +227,8 @@ export default class Test extends Base {
         }
         const sql = `select ${attrs} from ${this.dbName} ${where}`;
         console.log("查询", sql);
+        const data1 = await queryClickHouse(sql);
+        console.log(data1);
     }
     //个数
     count(data: any = {}) {
@@ -293,6 +296,7 @@ export default class Test extends Base {
     private getColumn(key: string) {
         let info: IColumn | undefined;
         this.columns.forEach((item) => {
+            console.log(item);
             if (item.name === key) info = item;
         });
         return info;
@@ -314,7 +318,7 @@ export default class Test extends Base {
 
 const testDB = new Test("test_db", {
     ttl: 1,
-    isCreate: true,
+    // isCreate: true,
 });
 
 const obj = [
@@ -323,12 +327,12 @@ const obj = [
         type: DataType.string,
         default: "",
     },
-    // {
-    //     name: "date2",
-    //     type: DataType.date,
-    // },
+    {
+        name: "date2",
+        type: DataType.date,
+    },
 ];
-// testDB.init(obj);
+testDB.init(obj);
 
 // testDB.query();
 
@@ -347,11 +351,11 @@ const obj = [
 //     },
 // ]);
 
-// testDB.query({
-//     model: {
-//         test1: "222",
-//     },
-// });
+testDB.query({
+    model: {
+        test1: "222",
+    },
+});
 
 // testDB.query({
 //     model: {
@@ -359,4 +363,5 @@ const obj = [
 //             [Op.in]: ["123", "222"],
 //         },
 //     },
+//     attrs: ["id", "test1"],
 // });

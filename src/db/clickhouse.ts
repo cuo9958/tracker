@@ -1,7 +1,5 @@
 import { ClickHouse } from "clickhouse";
 import config from "config";
-import nanoid from "nanoid";
-import { DateFormart } from "../utils/date";
 
 interface ICFG {
     url: string;
@@ -59,68 +57,13 @@ export function CreateDataBase(dataName, sync = false) {
     if (sync) return "CREATE DATABASE IF NOT EXISTS " + dataName;
     return "CREATE DATABASE " + dataName;
 }
-interface ModelType {
-    type: string;
-    default?: string | number | null;
-}
-export interface ModelObject {
-    [name: string]: ModelType;
-}
-interface ICreateTable {
-    tableName: string;
-    model: ModelObject;
-    enhine?: string;
-    partition?: string;
-    order?: string[];
-    sample?: string;
-    settings?: string;
-    ttl?: string;
-}
-/**
- *创建一个新的表
- * @param tableName 表名
- * @param model 映射对象
- * @param enhine 索引引擎
- * @param partition 分区建
- * @param order 排序、主键
- * @param sample 抽样
- * @param settings 其他设置
- * @param ttl 过期时间
- */
-export function CreateTable(opts: ICreateTable) {
-    const PARTITION = opts.partition ? "PARTITION BY " + opts.partition : "";
-    const ORDER = opts.order && opts.order.length > 0 ? "ORDER BY (" + opts.order.join(",") + ")" : "";
-    const SAMPLE = opts.sample ? "SAMPLE BY " + opts.sample : "";
-    const SETTINGS = opts.settings ? "SETTINGS " + opts.settings : "";
-    const body = getBody(opts.model);
-    return `CREATE TABLE IF NOT EXISTS ${opts.tableName}(
-        ${body}
-    )
-    ${opts.enhine} ${PARTITION} ${ORDER} ${SAMPLE} ${opts.ttl} ${SETTINGS};`;
-}
+
 /**
  * 删除表
  * @param tableName 表名
  */
 export function DeleteTable(tableName: string) {
     return "DROP TABLE IF EXISTS " + tableName + ";";
-}
-/**
- * 从对象到sql
- * @param model 对象
- */
-export function getBody(model: any) {
-    const list: string[] = [];
-    for (const key in model) {
-        const obj = model[key];
-        let tmp = "`" + key + "` " + obj.type;
-        if (obj.default !== undefined) {
-            tmp += " DEFAULT '" + obj.default + "'";
-        }
-        list.push(tmp);
-    }
-    list.push("id " + DataType.string);
-    return list.join(",");
 }
 
 /**
@@ -213,63 +156,3 @@ export function getEnhine(name: EnhineEnum, data1 = "", data2 = "") {
 export function getTTL(name: string, len: number, type: "MONTH") {
     return `TTL ${name} + INTERVAL ${len} ${type}`;
 }
-/**
- * 查询表
- * @param tableName 表名
- * @param obj 对象
- * @param attr 字段
- * @param limit 数量
- */
-export function Query(tableName: string, obj?: object, attr?: string[], limit?: number) {
-    let attrs = attr ? attr.join(",") : "*";
-    let sql = "select " + attrs + " from " + tableName;
-    let where = "";
-    if (obj) {
-        const list: string[] = [];
-        for (const key in obj) {
-            const tmp = typeof obj[key] === "string" ? "'" + obj[key] + "'" : obj[key];
-            list.push("`" + key + "`=" + tmp);
-        }
-        if (list.length > 0) sql += " where " + where;
-    }
-    if (limit) {
-        sql += " LIMIT " + limit;
-    }
-    return queryClickHouse(sql);
-}
-
-export function Insert(tableName: string, obj: object, data?: any) {
-    let listKey: string[] = [];
-    let listValue: Array<string | number> = [];
-    for (const key in obj) {
-        const v = obj[key];
-        if (typeof v === "string") {
-            listKey.push(key);
-            listValue.push(`'${v}'`);
-        }
-        if (typeof v === "number") {
-            listKey.push(key);
-            listValue.push(v);
-        }
-        if (v.constructor === Date) {
-            listKey.push(key);
-            listValue.push(`'${DateFormart(v, "yyyy-MM-dd")}'`);
-        }
-    }
-    listKey.push("id");
-    listValue.push(`'${nanoid.nanoid()}'`);
-    let sql = `INSERT INTO ${tableName} (${listKey.join(",")}) VALUES(${listValue.join(",")});`;
-    console.log(sql);
-    return insertClickHouse(sql, data);
-}
-
-//show databases;
-//show tables;
-
-export function getUUIDv4() {
-    return "SELECT generateUUIDv4()";
-}
-
-//定时清理数据
-//配置数据查询接口和查询内容
-//自定义写入内容
