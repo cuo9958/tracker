@@ -117,12 +117,26 @@ export default {
             model,
             limit: limit,
             offset: pageindex * limit,
+            order: "createTime desc",
         });
 
         return {
             count,
             list,
         };
+    },
+    /**
+     * 获取合适的最后一个数据
+     * @param model 条件
+     */
+    async lastOne(model: any) {
+        const list = await BigData.query({
+            model,
+            limit: 1,
+            order: "createTime desc",
+        });
+        if (!list || list.length === 0) return null;
+        return list[0];
     },
     group() {},
 };

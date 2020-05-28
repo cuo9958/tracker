@@ -232,11 +232,11 @@ export default class Test extends Base {
         }
         let order = "";
         if (data.order) {
-            order = "order by " + order;
+            order = "order by " + data.order;
         }
         let limit = "";
         if (data.limit) {
-            limit = "limit " + data.limit;
+            limit = "limit 0," + data.limit;
             if (data.offset) {
                 limit = `limit ${data.offset},${data.limit}`;
             }

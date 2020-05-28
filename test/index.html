@@ -15,23 +15,23 @@
         <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script>
             function postMsg() {
-                // $.post("http://127.0.0.1:18630/api_track/log", {
-                //     title: "测试标题" + Math.random(),
-                //     desc: "测试的备注",
-                //     uid: "aaa234534656",
-                //     token: "adwadwdw",
-                //     version: "1.0.1",
-                //     platform: "wxapp",
-                //     clientid: "24353f3f434",
-                //     meta: {
-                //         test: 1,
-                //     },
-                // });
-                var xhr = new XMLHttpRequest();
+                $.post("http://127.0.0.1:18630/api_track/log", {
+                    title: "测试标题" + Math.random(),
+                    desc: "测试的备注",
+                    uid: "aaa234534656",
+                    token: "adwadwdw",
+                    version: "1.0.1",
+                    platform: "wxapp",
+                    clientid: "24353f3f434",
+                    meta: {
+                        test: 1,
+                    },
+                });
+                // var xhr = new XMLHttpRequest();
 
-                xhr.open("GET", "http://127.0.0.1:18630/api_track/log?title=123");
-                xhr.setRequestHeader("token", "123");
-                xhr.send(null);
+                // xhr.open("GET", "http://127.0.0.1:18630/api_track/log?title=123");
+                // xhr.setRequestHeader("token", "123");
+                // xhr.send(null);
             }
 
             function postErr() {
